@@ -65,17 +65,18 @@ map <int, pair <int, pair <char, string>>> calcularMovimiento(int x, int y, char
     char direccionActual = dir;
     for (int i = 0; i < size; i++) {
         saltarPaso = false;
+        concatenar = false;
         for (int j = 0; j < sombrasCoordenada.size(); j++) {
             if (concatenar) break;
             if ((sombrasCoordenada[j][0] == x) && (sombrasCoordenada[j][1] == y) && (sombrasDireccion[j] == direccionActual)) {
                 saltarPaso = true;
+                //cout << "Entrando sombra" << endl;
             }
         }
         if (saltarPaso) {
-            concatenar = !concatenar;
+            concatenar = true;
             continue;
         }
-        concatenar = !concatenar;
         if (x > xWorld || y > yWorld || x < 0 || y < 0) {
             resultado[xTemp] = make_pair(yTemp, make_pair(direccionActual, "LOST"));
             vector <int> sombra_robot;
@@ -93,6 +94,16 @@ map <int, pair <int, pair <char, string>>> calcularMovimiento(int x, int y, char
                 girarDireccion(direccionActual, direcciones[i]);
             }
         }
+        if (x > xWorld || y > yWorld || x < 0 || y < 0) {
+            resultado[xTemp] = make_pair(yTemp, make_pair(direccionActual, "LOST"));
+            vector <int> sombra_robot;
+            sombra_robot.push_back(xTemp);
+            sombra_robot.push_back(yTemp);
+            sombrasCoordenada.push_back(sombra_robot);
+            sombrasDireccion.push_back(direccionActual);
+            return resultado;
+        }
+        //cout << x << ' ' << y << ' ' << direccionActual << endl;
     }
     resultado[x] = make_pair(y, make_pair(direccionActual, "ALIVE"));
     return resultado;
@@ -115,9 +126,9 @@ int main() {
         }
         map <int, pair <int, pair <char, string>>> resultado = calcularMovimiento(xInitial, yInitial, direction, direcciones);
         for (auto itr = resultado.begin(); itr != resultado.end(); itr++) {
-            cout << itr->first << ' ' << itr->second.first << ' ' << itr->second.second.first << ' ';
+            cout << itr->first << ' ' << itr->second.first << ' ' << itr->second.second.first;
             if (itr->second.second.second == "LOST") {
-                cout << itr->second.second.second;
+                cout << ' ' << itr->second.second.second;
             }
             cout << endl;
         }

@@ -56,6 +56,22 @@ void girarDireccion(char &actual, char movimiento) {
 
 }
 
+bool movimientoValido(int x, int y, char direccion, char siguiente) {
+
+    if (siguiente == 'F') {
+        moveFront(x, y, direccion);
+    } else {
+        girarDireccion(direccion, siguiente);
+    }
+
+    if (x > xWorld || y > yWorld || x < 0 || y < 0) {
+        return true;
+    } else {
+        return false;
+    }
+
+}
+
 map <int, pair <int, pair <char, string>>> calcularMovimiento(int x, int y, char dir, vector <char> direcciones) {
 
     map <int, pair <int, pair <char, string>>> resultado;
@@ -68,8 +84,8 @@ map <int, pair <int, pair <char, string>>> calcularMovimiento(int x, int y, char
         concatenar = false;
         for (int j = 0; j < sombrasCoordenada.size(); j++) {
             if (concatenar) break;
-            if ((sombrasCoordenada[j][0] == x) && (sombrasCoordenada[j][1] == y) && (sombrasDireccion[j] == direccionActual)) {
-                saltarPaso = true;
+            if ((sombrasCoordenada[j][0] == x) && (sombrasCoordenada[j][1] == y)) {
+                saltarPaso = movimientoValido(x, y, direccionActual, direcciones[i]);
                 //cout << "Entrando sombra" << endl;
             }
         }
